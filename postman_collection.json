@@ -1,0 +1,108 @@
+{
+  "info": {
+    "name": "Digital Wallet API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {"key": "baseUrl", "value": "http://localhost:8000"},
+    {"key": "accessToken", "value": ""},
+    {"key": "refreshToken", "value": ""},
+    {"key": "walletId", "value": ""}
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"SecurePass1\",\n  \"full_name\": \"Demo User\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/register"
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@wallet.com\",\n  \"password\": \"Admin@12345\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/login"
+          }
+        },
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+            "url": "{{baseUrl}}/api/auth/me"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Wallets",
+      "item": [
+        {
+          "name": "Create Wallet",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currency\": \"INR\",\n  \"name\": \"Primary\"\n}"
+            },
+            "url": "{{baseUrl}}/api/wallets"
+          }
+        },
+        {
+          "name": "Deposit",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Idempotency-Key", "value": "dep-001"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": \"10000.00\",\n  \"description\": \"Initial funding\"\n}"
+            },
+            "url": "{{baseUrl}}/api/wallets/{{walletId}}/deposits"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Transfers",
+      "item": [
+        {
+          "name": "Create Transfer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{accessToken}}"},
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Idempotency-Key", "value": "trf-001"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sender_wallet_id\": \"{{walletId}}\",\n  \"receiver_wallet_id\": \"RECEIVER_WALLET_UUID\",\n  \"amount\": \"500.00\"\n}"
+            },
+            "url": "{{baseUrl}}/api/transfers"
+          }
+        }
+      ]
+    }
+  ]
+}
